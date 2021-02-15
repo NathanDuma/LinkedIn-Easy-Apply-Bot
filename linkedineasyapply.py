@@ -152,7 +152,7 @@ class LinkedinEasyApply:
             job_title_parsed = job_title.lower().split(' ')
 
             for word in self.title_blacklist:
-                if word in job_title_parsed:
+                if word.lower() in job_title_parsed:
                     contains_blacklisted_keywords = True
                     break
 
@@ -191,7 +191,8 @@ class LinkedinEasyApply:
                     traceback.print_exc()
                     print("Could not apply to the job!")
                     pass
-
+            else:
+                print("Job contains blacklisted keyword or company name!")
             self.seen_jobs += link
 
     def apply_to_job(self):
