@@ -275,7 +275,7 @@ uploads:
  #coverLetter: C:\Users\myDirectory\CoverLettter.pdf
  ```
 Answer these questions with regards to the company you are applying to. 
-For the degrees part umcomment which degrees you have, and do not add other ones since the linkedin questions are generic.
+For the degrees part uncomment which degrees you have, and do not add other ones since the linkedin questions are generic.
 ```yaml
 # ------------ Additional parameters: checkboxes ---------------
 checkboxes:
