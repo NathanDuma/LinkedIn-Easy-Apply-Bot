@@ -585,7 +585,7 @@ class LinkedinEasyApply:
                     elif 'cover' in upload_type.text.lower():
                         if self.cover_letter_dir != '':
                             upload_button.send_keys(self.cover_letter_dir)
-                        elif 'reauired' in upload_type.text.lower():
+                        elif 'required' in upload_type.text.lower():
                             upload_button.send_keys(self.resume_dir)
         except:
             print("Failed to upload resume or cover letter!")
