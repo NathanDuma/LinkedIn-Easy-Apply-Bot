@@ -181,7 +181,7 @@ eeo:
 
 ## Execute
 
-To run the bot, run the following in the ocmmand line:
+To run the bot, run the following in the command line:
 ```
 python3 main.py
 ```
