@@ -194,7 +194,7 @@ Just fill in your email and password for linkedin.
 email: email@domain.com
 password: yourpassword
 ```
-This prevents your computer from going to sleep so teh bot can keep running when you are not using it. Set this to True if you want this disabled.
+This prevents your computer from going to sleep so the bot can keep running when you are not using it. Set this to True if you want this disabled.
 ```yaml
 disableAntiLock: False
 ```
