@@ -1,5 +1,6 @@
 # Linkedin Easy Apply Bot
 Automatically apply to Linkedin Easy Apply jobs. This bot answers the application questions as well!
+This is for educational purposes only. I am not responsible if your LinkedIn account gets suspended or for anything else.
 
 This bot is written in Python using Selenium.
 
