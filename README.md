@@ -186,7 +186,7 @@ To run the bot, run the following in the ocmmand line:
 python3 main.py
 ```
 
-Explanations for config.yaml:
+## Config.yaml Explanations
 Just fill in your email and password for linkedin.
 ```yaml
 email: email@domain.com
