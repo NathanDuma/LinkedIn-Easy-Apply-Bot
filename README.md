@@ -272,9 +272,6 @@ uploads:
  # Cover letter is optional
  #coverLetter: C:\Users\myDirectory\CoverLettter.pdf
  ```
-
-
-# ------------ QA section -------------------
 Answer these questions with regards to the company you are applying to. 
 For the degrees part umcomment which degrees you have, and do not add other ones since the linkedin questions are generic.
 ```yaml
