@@ -396,7 +396,7 @@ class LinkedinEasyApply:
 
                         to_enter = no_of_years
                     elif 'grade point average' in question_text:
-                        to_enter = self.decimals['universityGpa']
+                        to_enter = self.university_gpa
                     elif 'first name' in question_text:
                         to_enter = self.personal_info['First Name']
                     elif 'last name' in question_text:
