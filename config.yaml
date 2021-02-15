@@ -1,0 +1,163 @@
+email: email@domain.com
+password: yourpassword
+
+disableAntiLock: False
+
+remote: False
+
+experienceLevel:
+ internship: False
+ entry: True
+ associate: False
+ mid-senior level: False
+ director: False
+ executive: False
+ 
+jobTypes:
+ full-time: True
+ contract: False
+ part-time: False
+ temporary: False
+ internship: False
+ other: False
+ volunteer: False
+ 
+date:
+ all time: True
+ month: False
+ week: False
+ 24 hours: False
+ 
+positions:
+ #- First position
+ #- A second position
+ #- A third position
+ #- ...
+locations:
+ #- First location
+ #- A second location
+ #- A third location
+ #- ...
+distance: 25
+
+outputFileDirectory: C:\Users\myDirectory\
+
+companyBlacklist:
+ #- company
+ #- company2
+
+titleBlacklist:
+ #- word1
+ #- word2
+
+uploads:
+ resume: C:\Users\myDirectory\Resume.pdf
+ # Cover letter is optional
+ #coverLetter: C:\Users\myDirectory\CoverLettter.pdf
+
+
+# ------------ QA section -------------------
+
+# ------------ Additional parameters: checkboxes ---------------
+checkboxes:
+ # Do you have a valid driver's license? (yes/no checkbox)
+ driversLicence: True
+ # Will you now, or in the future, require sponsorship for employment visa status (e.g. H-1B visa status)? (yes/no checkbox)
+ # This is relative to the location and your citizenship applying above, and same with legallyAuthorized.
+ requireVisa: False
+ # Are you legally authorized to work in COUNTRY? (yes/no checkbox)
+ legallyAuthorized: True
+ # We must fill this position urgently. Can you start immediately? (yes/no checkbox)
+ urgentFill: True
+ # Are you comfortable commuting to this job's location? (yes/no checkbox)
+ commute: True
+ # Have you completed the following level of education: DEGREE TYPE? (yes/no checkbox)
+ degreeCompleted:
+  - High School Diploma
+  - Bachelor's Degree
+  # - Associate's Degree
+  # - Master's Degree
+  # - Master of Business Administration
+  # - Doctor of Philosophy
+  # - Doctor of Medicine
+  # - Doctor of Law
+ # Are you willing to undergo a background check, in accordance with local law/regulations?
+ backgroundCheck: True
+
+# ------------ Additional parameters: univeristyGpa ---------------
+universityGpa: 4.0
+
+# ------------ Additional parameters: languages ---------------
+languages:
+ english: Native or bilingual # None, Conversational, Professional, Native or bilingual
+
+
+# ------------ Additional parameters: years of INDUSTRY experience ---------------
+# How many years of TECHNOLOGY experience do you currently have? (whole numbers only)
+industry:
+ # normal ones
+ Accounting/Auditing: 0
+ Administrative : 0
+ Advertising : 0
+ Analyst : 0
+ Art/Creative: 0
+ Business Development: 0
+ Consulting: 0
+ Customer Service: 0
+ Distribution Design: 0
+ Education: 0
+ Engineering: 0
+ Finance: 0
+ General Business: 0
+ Health Care Provider: 0
+ Human Resources: 0
+ Information Technology: 0
+ Legal: 0
+ Management: 0
+ Manufacturing: 0
+ Marketing: 0
+ Public Relations: 0
+ Purchasing: 0
+ Product Management: 0
+ Project Management: 0
+ Production: 0
+ Quality Assurance: 0
+ Research: 0
+ Sales: 0
+ Science: 0
+ Strategy/Planning: 0
+ Supply Chain: 0
+ Training: 0
+ Writing/Editing: 0
+ # end normal ones
+ # put your custom ones here
+ #C++: 0
+ #Python: 1
+ # end custom ones
+
+
+# ------------ Additional parameters: years of technology experience ---------------
+# How many years of work experience do you have using TECHNOLOGY? (whole numbers only)
+technology:
+ #python: 0
+ #selenium: 0
+# ------------ Additional parameters: personal info ---------------
+personalInfo:
+ First Name: FirstName
+ Last Name: LastName
+ Phone Country Code: Canada (+1) # See linkedin for your country code, must be exact
+ Mobile Phone Number: 1234567890
+ Street address: 123 Fake Street
+ City: Red Deer, Alberta # Include the state/province as well!
+ State: YourState
+ Zip: YourZip/Postal
+ Linkedin: https://www.linkedin.com/in/my-linkedin-profile
+ Website: https://www.my-website.com # github/website is interchangable here
+
+# ------------ Additional parameters: USA employment crap ---------------
+eeo:
+ gender: None
+ race: None
+ vetran: None
+ disability: None
+ citizenship: Canadian
