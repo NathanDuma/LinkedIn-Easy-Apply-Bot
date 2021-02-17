@@ -308,8 +308,6 @@ class LinkedinEasyApply:
                             answer = radio_options[len(radio_options) - 1]
                     elif 'north korea' in radio_text:
                         answer = 'no'
-                    elif 'canada' in radio_text:
-                        answer = 'yes'
                     elif 'sponsor' in radio_text:
                         answer = self.get_answer('requireVisa')
                     elif 'authorized' in radio_text or 'authorised' in radio_text:
@@ -465,18 +463,6 @@ class LinkedinEasyApply:
 
                         for option in options:
                             if 'no' in option.lower():
-                                choice = option
-
-                        if choice == "":
-                            choice = options[len(options) - 1]
-
-                        self.select_dropdown(dropdown_field, choice)
-                    elif 'canada' in question_text:
-
-                        choice = ""
-
-                        for option in options:
-                            if 'Yes' in option.lower():
                                 choice = option
 
                         if choice == "":
