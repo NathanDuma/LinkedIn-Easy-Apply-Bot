@@ -133,6 +133,8 @@ industry:
  # put your custom ones here
  #C++: 0
  #Python: 1
+ # default to put for any skill that you did not list
+ default: 0
  # end custom ones
 
 
@@ -141,6 +143,8 @@ industry:
 technology:
  #python: 0
  #selenium: 0
+ # default to put for any skill that you did not list
+ default: 0
 # ------------ Additional parameters: personal info ---------------
 personalInfo:
  First Name: FirstName

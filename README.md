@@ -150,6 +150,8 @@ industry:
  # put your custom ones here
  #C++: 0
  #Python: 1
+ # default to put for any skill that you did not list
+ default: 0
  # end custom ones
 
 
@@ -158,6 +160,8 @@ industry:
 technology:
  #python: 0
  #selenium: 0
+ # default to put for any skill that you did not list
+ default: 0
 # ------------ Additional parameters: personal info ---------------
 personalInfo:
  First Name: FirstName
@@ -316,7 +320,7 @@ languages:
  ```
 Answer the following question for the default industries.
 Next, input your custom ones. This can include technologies, programming languages, frameworks, etc.
-The years of experience needs to be a whole number.
+The years of experience needs to be a whole number. Fill in the default for industries you did not list (keep in mind if it's not zero, you will get your application seen more often).
 ```yaml
 # ------------ Additional parameters: years of INDUSTRY experience ---------------
 # How many years of TECHNOLOGY experience do you currently have? (whole numbers only)
@@ -359,16 +363,21 @@ industry:
  #C++: 0
  #Python: 1
  # end custom ones
+ # default to put for any skill that you did not list
+ default: 0
  ```
 Answer the following question for your tools and technologies. 
 Things like programming languages, frameworks, etc.
 The years of experience needs to be a whole number.
+Fill in the default for technologies you did not list (keep in mind if it's not zero, you will get your application seen more often).
 ```yaml
 # ------------ Additional parameters: years of technology experience ---------------
 # How many years of work experience do you have using TECHNOLOGY? (whole numbers only)
 technology:
  #python: 0
  #selenium: 0
+ # default to put for any skill that you did not list
+ default: 0
   ```
 Input your personal info. Include the state/province in the city name to not get the wrong city when choosing from a dropdown.
 The phone country code needs to be exact for the one that is on linkedin.

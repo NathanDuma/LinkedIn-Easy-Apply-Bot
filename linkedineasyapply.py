@@ -33,6 +33,8 @@ class LinkedinEasyApply:
         self.technology = parameters.get('technology', [])
         self.personal_info = parameters.get('personalInfo', [])
         self.eeo = parameters.get('eeo', [])
+        self.technology_default = self.technology['default']
+        self.industry_default = self.industry['default']
 
 
     def login(self):
@@ -378,7 +380,7 @@ class LinkedinEasyApply:
 
                     to_enter = ''
                     if 'experience do you currently have' in question_text:
-                        no_of_years = 0
+                        no_of_years = self.industry_default
 
                         for industry in self.industry:
                             if industry.lower() in question_text:
@@ -387,7 +389,7 @@ class LinkedinEasyApply:
 
                         to_enter = no_of_years
                     elif 'many years of work experience do you have using' in question_text:
-                        no_of_years = 0
+                        no_of_years = self.technology_default
 
                         for technology in self.technology:
                             if technology.lower() in question_text:

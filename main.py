@@ -97,11 +97,13 @@ def validate_yaml():
 
     for skill in industry:
         assert isinstance(industry[skill], int)
+    assert 'default' in industry
 
     technology = parameters.get('technology', [])
 
     for tech in technology:
         assert isinstance(technology[tech], int)
+    assert 'default' in technology
 
     assert len(parameters['personalInfo'])
     personal_info = parameters.get('personalInfo', [])
