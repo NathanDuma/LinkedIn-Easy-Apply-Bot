@@ -117,6 +117,9 @@ class LinkedinEasyApply:
         if 'No matching jobs found' in no_jobs_text:
             raise Exception("No more jobs on this page")
 
+        if 'unfortunately, things aren' in self.browser.page_source.lower():
+            raise Exception("No more jobs on this page")
+
         try:
             job_results = self.browser.find_element_by_class_name("jobs-search-results")
             self.scroll_slow(job_results)
@@ -233,7 +236,7 @@ class LinkedinEasyApply:
                     next_button.click()
                     time.sleep(random.uniform(3.0, 5.0))
 
-                    if 'please enter a valid answer' in self.browser.page_source.lower():
+                    if 'please enter a valid answer' in self.browser.page_source.lower() or 'file is required' in self.browser.page_source.lower():
                         retries -= 1
                         print("Retrying application, attempts left: " + str(retries))
                     else:
@@ -287,12 +290,13 @@ class LinkedinEasyApply:
             return 'no'
 
     def additional_questions(self):
+        #pdb.set_trace()
         frm_el = self.browser.find_elements_by_class_name('jobs-easy-apply-form-section__grouping')
         if len(frm_el) > 0:
             for el in frm_el:
                 # Radio check
                 try:
-                    radios = el.find_element_by_class_name('jobs-easy-apply-form-section__element').find_elements_by_class_name('fb-radio')
+                    radios = el.find_element_by_class_name('jobs-easy-apply-form-element').find_elements_by_class_name('fb-radio')
 
                     radio_text = el.text.lower()
                     radio_options = [text.text.lower() for text in radios]
@@ -312,7 +316,7 @@ class LinkedinEasyApply:
                         answer = 'no'
                     elif 'sponsor' in radio_text:
                         answer = self.get_answer('requireVisa')
-                    elif 'authorized' in radio_text or 'authorised' in radio_text:
+                    elif 'authorized' in radio_text or 'authorised' in radio_text or 'legally' in radio_text:
                         answer = self.get_answer('legallyAuthorized')
                     elif 'urgent' in radio_text:
                         answer = self.get_answer('urgentFill')
@@ -353,7 +357,7 @@ class LinkedinEasyApply:
                     pass
                 # Questions check
                 try:
-                    question = el.find_element_by_class_name('jobs-easy-apply-form-section__element')
+                    question = el.find_element_by_class_name('jobs-easy-apply-form-element')
                     question_text = question.find_element_by_class_name('fb-form-element-label').text.lower()
 
                     txt_field_visible = False
@@ -439,7 +443,7 @@ class LinkedinEasyApply:
                     pass
                 # Dropdown check
                 try:
-                    question = el.find_element_by_class_name('jobs-easy-apply-form-section__element')
+                    question = el.find_element_by_class_name('jobs-easy-apply-form-element')
                     question_text = question.find_element_by_class_name('fb-form-element-label').text.lower()
 
                     dropdown_field = question.find_element_by_class_name('fb-dropdown__select')
@@ -547,7 +551,7 @@ class LinkedinEasyApply:
 
                 # Checkbox check for agreeing to terms and service
                 try:
-                    question = el.find_element_by_class_name('jobs-easy-apply-form-section__element')
+                    question = el.find_element_by_class_name('jobs-easy-apply-form-element')
 
                     clickable_checkbox = question.find_element_by_tag_name('label')
 
@@ -576,6 +580,8 @@ class LinkedinEasyApply:
                             upload_button.send_keys(self.cover_letter_dir)
                         elif 'required' in upload_type.text.lower():
                             upload_button.send_keys(self.resume_dir)
+                    else:
+                        upload_button.send_keys(self.resume_dir)
         except:
             print("Failed to upload resume or cover letter!")
             pass
