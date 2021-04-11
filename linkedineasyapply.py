@@ -251,12 +251,23 @@ class LinkedinEasyApply:
                 self.browser.find_elements_by_class_name('artdeco-modal__confirm-dialog-btn')[1].click()
                 time.sleep(random.uniform(3, 5))
                 raise Exception("Failed to apply to job!")
+
+        closed_notification = False
+        time.sleep(random.uniform(3, 5))
         try:
-            time.sleep(random.uniform(3, 5))
             self.browser.find_element_by_class_name('artdeco-modal__dismiss').click()
-            time.sleep(random.uniform(3, 5))
+            closed_notification = True
         except:
-            raise Exception("Failed to close the final screen!")
+            pass
+        try:
+            self.browser.find_element_by_class_name('artdeco-toast-item__dismiss').click()
+            closed_notification = True
+        except:
+            pass
+        time.sleep(random.uniform(3, 5))
+
+        if closed_notification is False:
+            raise Exception("Could not close the applied confirmation window!")
 
         return True
 
