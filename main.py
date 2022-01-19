@@ -37,7 +37,7 @@ def validate_yaml():
             raise Exception(mandatory_param + ' is not inside the yml file!')
 
     assert validate_email(parameters['email'])
-    assert len(parameters['password']) > 0
+    assert len(str(parameters['password'])) > 0
 
     assert isinstance(parameters['disableAntiLock'], bool)
 
