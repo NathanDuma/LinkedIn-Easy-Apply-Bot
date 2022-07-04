@@ -1,4 +1,4 @@
-import time, random, csv, pyautogui, pdb, traceback, sys
+import time, random, csv, pyautogui, pdb, traceback, sys, re
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -13,6 +13,7 @@ class LinkedinEasyApply:
         self.email = parameters['email']
         self.password = parameters['password']
         self.disable_lock = parameters['disableAntiLock']
+        self.blacklistDescriptionRegex = parameters.get('blacklistDescriptionRegex',[]) or []
         self.company_blacklist = parameters.get('companyBlacklist', []) or []
         self.title_blacklist = parameters.get('titleBlacklist', []) or []
         self.positions = parameters.get('positions', [])
@@ -168,30 +169,46 @@ class LinkedinEasyApply:
                     job_el.click()
 
                     time.sleep(random.uniform(3, 5))
-
-
+                    
+                    
                     try:
-                        done_applying = self.apply_to_job()
-                        if done_applying:
-                            print("Done applying to the job!")
-                        else:
-                            print('Already applied to the job!')
+                        inner_description: str = self.browser.find_element(By.CLASS_NAME, 'jobs-description-content__text').text
                     except:
-                        temp = self.file_name
-                        self.file_name = "failed"
-                        print("Failed to apply to job! Please submit a bug report with this link: " + link)
-                        print("Writing to the failed csv file...")
+                        pass
+                                        
+                    contains_blacklisted_description_text: bool = False
+                    for sentence in self.blacklistDescriptionRegex:
+                        match_result = re.search(sentence, inner_description, re.I)
+                        is_in_description: bool = match_result is not None
+                        if is_in_description:
+                            contains_blacklisted_description_text = True
+                            break
+
+                    if contains_blacklisted_description_text:
+                        print(f'Job description contains blacklisted text. {match_result}')
+                    else:
+                        try:
+                            done_applying = self.apply_to_job()
+                            if done_applying:
+                                print("Done applying to the job!")
+                            else:
+                                print('Already applied to the job!')
+                        except:
+                            temp = self.file_name
+                            self.file_name = "failed"
+                            print("Failed to apply to job! Please submit a bug report with this link: " + link)
+                            print("Writing to the failed csv file...")
+                            try:
+                                self.write_to_file(company, job_title, link, job_location, location)
+                            except:
+                                pass
+                            self.file_name = temp
+
                         try:
                             self.write_to_file(company, job_title, link, job_location, location)
-                        except:
-                            pass
-                        self.file_name = temp
-
-                    try:
-                        self.write_to_file(company, job_title, link, job_location, location)
-                    except Exception:
-                        print("Could not write the job to the file! No special characters in the job title/company is allowed!")
-                        traceback.print_exc()
+                        except Exception:
+                            print("Could not write the job to the file! No special characters in the job title/company is allowed!")
+                            traceback.print_exc()
                 except:
                     traceback.print_exc()
                     print("Could not apply to the job!")
