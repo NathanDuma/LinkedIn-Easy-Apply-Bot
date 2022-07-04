@@ -12,7 +12,7 @@ experienceLevel:
  mid-senior level: False
  director: False
  executive: False
- 
+
 jobTypes:
  full-time: True
  contract: False
@@ -21,13 +21,13 @@ jobTypes:
  internship: False
  other: False
  volunteer: False
- 
+
 date:
  all time: True
  month: False
  week: False
  24 hours: False
- 
+
 positions:
  #- First position
  #- A second position
@@ -50,11 +50,25 @@ titleBlacklist:
  #- word1
  #- word2
 
+#**************************************************
+# A list of regular expressions to test against
+# the job description section.
+# Won't apply for the job if any of the provided
+# regular expressions is a match.
+#**************************************************
+blacklistDescriptionSentences:
+ # - '[1-9]\+? years?'
+ # - '[1-2][0-9]+\+? years'
+ # - '(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve) years?'
+ # - '(experience|deep knowledge|knowledge|expertise|excellence) (in|of|at|with|working with) (cpp|c\+\+|c|c#|java|docker|\.net|aws|gcp|azure)'
+ # - '[אבגדהוזחטיכלמנסעפצקרשתןץףםך]+'
+ # - '((c\+\+|cpp).*){3,}'
+ # - 'knowledge .* CUDA programming'
+
 uploads:
  resume: C:\Users\myDirectory\Resume.pdf
  # Cover letter is optional
  #coverLetter: C:\Users\myDirectory\CoverLettter.pdf
-
 
 # ------------ QA section -------------------
 
@@ -91,15 +105,14 @@ universityGpa: 4.0
 languages:
  english: Native or bilingual # None, Conversational, Professional, Native or bilingual
 
-
 # ------------ Additional parameters: years of INDUSTRY experience ---------------
 # How many years of TECHNOLOGY experience do you currently have? (whole numbers only)
 industry:
  # normal ones
  Accounting/Auditing: 0
- Administrative : 0
- Advertising : 0
- Analyst : 0
+ Administrative: 0
+ Advertising: 0
+ Analyst: 0
  Art/Creative: 0
  Business Development: 0
  Consulting: 0
@@ -136,7 +149,6 @@ industry:
  # default to put for any skill that you did not list
  default: 0
  # end custom ones
-
 
 # ------------ Additional parameters: years of technology experience ---------------
 # How many years of work experience do you have using TECHNOLOGY? (whole numbers only)
