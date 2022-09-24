@@ -41,9 +41,9 @@ class LinkedinEasyApply:
         try:
             self.browser.get("https://www.linkedin.com/login")
             time.sleep(random.uniform(5, 10))
-            self.browser.find_element_by_id("username").send_keys(self.email)
-            self.browser.find_element_by_id("password").send_keys(self.password)
-            self.browser.find_element_by_css_selector(".btn__primary--large").click()
+            self.browser.find_element(By.ID,"username").send_keys(self.email)
+            self.browser.find_element(By.ID,"password").send_keys(self.password)
+            self.browser.find_element(By.CSS_SELECTOR,".btn__primary--large").click()
             time.sleep(random.uniform(5, 10))
         except TimeoutException:
             raise Exception("Could not login!")
@@ -110,7 +110,7 @@ class LinkedinEasyApply:
     def apply_jobs(self, location):
         no_jobs_text = ""
         try:
-            no_jobs_element = self.browser.find_element_by_class_name('jobs-search-two-pane__no-results-banner--expand')
+            no_jobs_element = self.browser.find_element(By.CLASS_NAME, 'jobs-search-two-pane__no-results-banner--expand')
             no_jobs_text = no_jobs_element.text
         except:
             pass
@@ -121,11 +121,11 @@ class LinkedinEasyApply:
             raise Exception("No more jobs on this page")
 
         try:
-            job_results = self.browser.find_element_by_class_name("jobs-search-results")
+            job_results = self.browser.find_element(By.CLASS_NAME,"jobs-search-results-list")
             self.scroll_slow(job_results)
             self.scroll_slow(job_results, step=300, reverse=True)
-
-            job_list = self.browser.find_elements_by_class_name('jobs-search-results__list')[0].find_elements_by_class_name('jobs-search-results__list-item')
+            job_list = job_results.find_elements(By.CLASS_NAME, 'scaffold-layout__list-container')[0].find_elements(By.CLASS_NAME, 'jobs-search-results__list-item')
+            # job_list = self.browser.find_element(By.CLASS_NAME,'jobs-search-results__list-item')[0]
         except:
             raise Exception("No more jobs on this page")
 
@@ -136,20 +136,21 @@ class LinkedinEasyApply:
             job_title, company, job_location, apply_method, link = "", "", "", "", ""
 
             try:
-                job_title = job_tile.find_element_by_class_name('job-card-list__title').text
-                link = job_tile.find_element_by_class_name('job-card-list__title').get_attribute('href').split('?')[0]
+                job_list = job_results.find_elements_by_class_name('scaffold-layout__list-container')[0].find_elements_by_class_name('scaffold-layout__list-item')
+                job_title = job_tile.find_element(By.CLASS_NAME,'job-card-list__title').text
+                link = job_tile.find_element(By.CLASS_NAME,'job-card-list__title').get_attribute('href').split('?')[0]
             except:
                 pass
             try:
-                company = job_tile.find_element_by_class_name('job-card-container__company-name').text
+                company = job_tile.find_element(By.CLASS_NAME,'job-card-container__company-name').text
             except:
                 pass
             try:
-                job_location = job_tile.find_element_by_class_name('job-card-container__metadata-item').text
+                job_location = job_tile.find_element(By.CLASS_NAME,'job-card-container__metadata-item').text
             except:
                 pass
             try:
-                apply_method = job_tile.find_element_by_class_name('job-card-container__apply-method').text
+                apply_method = job_tile.find_element(By.CLASS_NAME,'job-card-container__apply-method').text
             except:
                 pass
 
@@ -164,7 +165,7 @@ class LinkedinEasyApply:
             if company.lower() not in [word.lower() for word in self.company_blacklist] and \
                contains_blacklisted_keywords is False and link not in self.seen_jobs:
                 try:
-                    job_el = job_tile.find_element_by_class_name('job-card-list__title')
+                    job_el = job_tile.find_elements(By.CLASS_NAME,'job-card-list__title')[0]
                     job_el.click()
 
                     time.sleep(random.uniform(3, 5))
@@ -204,12 +205,12 @@ class LinkedinEasyApply:
         easy_apply_button = None
 
         try:
-            easy_apply_button = self.browser.find_element_by_class_name('jobs-apply-button')
+            easy_apply_button = self.browser.find_element(By.CLASS_NAME,'jobs-apply-button')
         except:
             return False
 
         try:
-            job_description_area = self.browser.find_element_by_class_name("jobs-search__job-details--container")
+            job_description_area = self.browser.find_element(By.CLASS_NAME,"jobs-search__job-details--container")
             self.scroll_slow(job_description_area, end=1600)
             self.scroll_slow(job_description_area, end=1600, step=400, reverse=True)
         except:
@@ -225,7 +226,7 @@ class LinkedinEasyApply:
             while retries > 0:
                 try:
                     self.fill_up()
-                    next_button = self.browser.find_element_by_class_name("artdeco-button--primary")
+                    next_button = self.browser.find_element(By.CLASS_NAME,"artdeco-button--primary")
                     button_text = next_button.text.lower()
                     if submit_application_text in button_text:
                         try:
@@ -255,12 +256,12 @@ class LinkedinEasyApply:
         closed_notification = False
         time.sleep(random.uniform(3, 5))
         try:
-            self.browser.find_element_by_class_name('artdeco-modal__dismiss').click()
+            self.browser.find_element(By.CLASS_NAME,'artdeco-modal__dismiss').click()
             closed_notification = True
         except:
             pass
         try:
-            self.browser.find_element_by_class_name('artdeco-toast-item__dismiss').click()
+            self.browser.find_element(By.CLASS_NAME,'artdeco-toast-item__dismiss').click()
             closed_notification = True
         except:
             pass
@@ -273,7 +274,7 @@ class LinkedinEasyApply:
 
     def home_address(self, element):
         try:
-            groups = element.find_elements_by_class_name('jobs-easy-apply-form-section__grouping')
+            groups = element.find_element_by_class_name('jobs-easy-apply-form-section__grouping')
             if len(groups) > 0:
                 for group in groups:
                     lb = group.find_element_by_tag_name('label').text.lower()
@@ -302,12 +303,12 @@ class LinkedinEasyApply:
 
     def additional_questions(self):
         #pdb.set_trace()
-        frm_el = self.browser.find_elements_by_class_name('jobs-easy-apply-form-section__grouping')
+        frm_el = self.browser.find_element(By.CLASS_NAME, 'jobs-easy-apply-form-section__grouping')
         if len(frm_el) > 0:
             for el in frm_el:
                 # Radio check
                 try:
-                    radios = el.find_element_by_class_name('jobs-easy-apply-form-element').find_elements_by_class_name('fb-radio')
+                    radios = el.find_element(By.CLASS_NAME, 'jobs-easy-apply-form-element').find_element(By.CLASS_NAME, 'fb-radio')
 
                     radio_text = el.text.lower()
                     radio_options = [text.text.lower() for text in radios]
@@ -368,24 +369,24 @@ class LinkedinEasyApply:
                     pass
                 # Questions check
                 try:
-                    question = el.find_element_by_class_name('jobs-easy-apply-form-element')
-                    question_text = question.find_element_by_class_name('fb-form-element-label').text.lower()
+                    question = el.find_element(By.CLASS_NAME,'jobs-easy-apply-form-element')
+                    question_text = question.find_element(By.CLASS_NAME,'fb-form-element-label').text.lower()
 
                     txt_field_visible = False
                     try:
-                        txt_field = question.find_element_by_class_name('fb-single-line-text__input')
+                        txt_field = question.find_element(By.CLASS_NAME,'fb-single-line-text__input')
 
                         txt_field_visible = True
                     except:
                         try:
-                            txt_field = question.find_element_by_class_name('fb-textarea')
+                            txt_field = question.find_element(By.CLASS_NAME,'fb-textarea')
 
                             txt_field_visible = True
                         except:
                             pass
 
                     if txt_field_visible != True:
-                        txt_field = question.find_element_by_class_name('multi-line-text__input')
+                        txt_field = question.find_element(By.CLASS_NAME,'multi-line-text__input')
 
                     text_field_type = txt_field.get_attribute('name').lower()
                     if 'numeric' in text_field_type:
@@ -443,7 +444,7 @@ class LinkedinEasyApply:
                     pass
                 # Date Check
                 try:
-                    date_picker = el.find_element_by_class_name('artdeco-datepicker__input ')
+                    date_picker = el.find_element(By.CLASS_NAME,'artdeco-datepicker__input ')
                     date_picker.clear()
                     date_picker.send_keys(date.today().strftime("%m/%d/%y"))
                     time.sleep(3)
@@ -454,10 +455,10 @@ class LinkedinEasyApply:
                     pass
                 # Dropdown check
                 try:
-                    question = el.find_element_by_class_name('jobs-easy-apply-form-element')
-                    question_text = question.find_element_by_class_name('fb-form-element-label').text.lower()
+                    question = el.find_element(By.CLASS_NAME,'jobs-easy-apply-form-element')
+                    question_text = question.find_element(By.CLASS_NAME,'fb-form-element-label').text.lower()
 
-                    dropdown_field = question.find_element_by_class_name('fb-dropdown__select')
+                    dropdown_field = question.find_element(By.CLASS_NAME,'fb-dropdown__select')
 
                     select = Select(dropdown_field)
 
@@ -562,7 +563,7 @@ class LinkedinEasyApply:
 
                 # Checkbox check for agreeing to terms and service
                 try:
-                    question = el.find_element_by_class_name('jobs-easy-apply-form-element')
+                    question = el.find_element(By.CLASS_NAME,'jobs-easy-apply-form-element')
 
                     clickable_checkbox = question.find_element_by_tag_name('label')
 
@@ -614,7 +615,7 @@ class LinkedinEasyApply:
 
     # Contact info fill-up
     def contact_info(self):
-        frm_el = self.browser.find_elements_by_class_name('jobs-easy-apply-form-section__grouping')
+        frm_el = self.browser.find_element(By.CLASS_NAME, 'jobs-easy-apply-form-section__grouping')
         if len(frm_el) > 0:
             for el in frm_el:
                 text = el.text.lower()
@@ -622,25 +623,25 @@ class LinkedinEasyApply:
                     continue
                 elif 'phone number' in text:
                     try:
-                        country_code_picker = el.find_element_by_class_name('fb-dropdown__select')
+                        country_code_picker = el.find_element(By.CLASS_NAME,'fb-dropdown__select')
                         self.select_dropdown(country_code_picker, self.personal_info['Phone Country Code'])
                     except:
                         print("Country code " + self.personal_info['Phone Country Code'] + " not found! Make sure it is exact.")
                     try:
-                        phone_number_field = el.find_element_by_class_name('fb-single-line-text__input')
+                        phone_number_field = el.find_element(By.CLASS_NAME,'fb-single-line-text__input')
                         self.enter_text(phone_number_field, self.personal_info['Mobile Phone Number'])
                     except:
                         print("Could not input phone number.")
 
     def fill_up(self):
         try:
-            easy_apply_content = self.browser.find_element_by_class_name('jobs-easy-apply-content')
-            b4 = easy_apply_content.find_element_by_class_name('pb4')
-            pb4 = easy_apply_content.find_elements_by_class_name('pb4')
+            easy_apply_content = self.browser.find_element(By.CLASS_NAME,'jobs-easy-apply-content')
+            pb4 = self.browser.find_element(By.CLASS_NAME, 'pb4')
             if len(pb4) > 0:
                 for pb in pb4:
                     try:
-                        label = pb.find_element_by_tag_name('h3').text.lower()
+                        #label = pb.find_element_by_tag_name('h3').text.lower()
+                        label = self.browser.find_element(By.TAG_NAME, 'h3').text.lower()
                         try:
                             self.additional_questions()
                         except:
