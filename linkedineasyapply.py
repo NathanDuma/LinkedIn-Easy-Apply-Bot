@@ -426,6 +426,8 @@ class LinkedinEasyApply:
                         to_enter = self.personal_info['Linkedin']
                     elif 'website' in question_text or 'github' in question_text or 'portfolio' in question_text:
                         to_enter = self.personal_info['Website']
+                    elif 'salary' in question_text:
+                        to_enter = self.personal_info['Salary Expectations']
                     else:
                         if text_field_type == 'numeric':
                             to_enter = 0

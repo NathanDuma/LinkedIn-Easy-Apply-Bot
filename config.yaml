@@ -149,6 +149,7 @@ technology:
 personalInfo:
  First Name: FirstName
  Last Name: LastName
+ Salary Expectations: 999999
  Phone Country Code: Canada (+1) # See linkedin for your country code, must be exact
  Mobile Phone Number: 1234567890
  Street address: 123 Fake Street
@@ -164,4 +165,4 @@ eeo:
  race: None
  vetran: None
  disability: None
- citizenship: Canadian
+ citizenship: Communist
