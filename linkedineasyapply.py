@@ -121,11 +121,11 @@ class LinkedinEasyApply:
             raise Exception("No more jobs on this page")
 
         try:
-            job_results = self.browser.find_element(By.CLASS_NAME, "jobs-search-results")
+            job_results = self.browser.find_element(By.CLASS_NAME, "jobs-search-results-list")
             self.scroll_slow(job_results)
             self.scroll_slow(job_results, step=300, reverse=True)
 
-            job_list = self.browser.find_elements(By.CLASS_NAME, 'jobs-search-results__list')[0].find_elements(By.CLASS_NAME, 'jobs-search-results__list-item')
+            job_list = self.browser.find_elements(By.CLASS_NAME, 'jobs-search-results-list')[0].find_elements(By.CLASS_NAME, 'jobs-search-results__list-item')
         except:
             raise Exception("No more jobs on this page")
 
@@ -492,12 +492,8 @@ class LinkedinEasyApply:
                         choice = ""
 
                         for option in options:
-                            if answer == 'yes':
+                            if answer in option.lower():
                                 choice = option
-                            else:
-                                if 'no' in option.lower():
-                                    choice = option
-
                         if choice == "":
                             choice = options[len(options) - 1]
 
@@ -508,13 +504,8 @@ class LinkedinEasyApply:
                         choice = ""
 
                         for option in options:
-                            if answer == 'yes':
-                                # find some common words
+                            if answer in option.lower():
                                 choice = option
-                            else:
-                                if 'no' in option.lower():
-                                    choice = option
-
                         if choice == "":
                             choice = options[len(options) - 1]
 
@@ -525,10 +516,8 @@ class LinkedinEasyApply:
                         choice = ""
 
                         for option in options:
-                            if answer == 'yes':
-                                if 'no' in option.lower():
-                                    choice = option
-
+                            if answer in option.lower():
+                                choice = option
                         if choice == "":
                             choice = options[len(options) - 1]
 
