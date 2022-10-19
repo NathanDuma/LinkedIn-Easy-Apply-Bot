@@ -1,8 +1,12 @@
 import time, random, csv, pyautogui, pdb, traceback, sys
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
 from datetime import date
 from itertools import product
 
@@ -32,6 +36,9 @@ class LinkedinEasyApply:
         self.industry = parameters.get('industry', [])
         self.technology = parameters.get('technology', [])
         self.personal_info = parameters.get('personalInfo', [])
+        self.hourly_rate = parameters.get('hourlyRate')
+        self.daily_rate = parameters.get('dailyRate')
+        self.desired_salary = parameters.get('desiredSalary')
         self.eeo = parameters.get('eeo', [])
         self.technology_default = self.technology['default']
         self.industry_default = self.industry['default']
@@ -164,7 +171,10 @@ class LinkedinEasyApply:
             if company.lower() not in [word.lower() for word in self.company_blacklist] and \
                contains_blacklisted_keywords is False and link not in self.seen_jobs:
                 try:
-                    job_el = job_tile.find_element(By.CLASS_NAME, 'job-card-list__title')
+                    ignored_exceptions=(NoSuchElementException,StaleElementReferenceException,)
+                    job_el = WebDriverWait(self.browser, 5000,ignored_exceptions=ignored_exceptions)\
+                                            .until(expected_conditions.presence_of_element_located((By.CLASS_NAME, 'job-card-list__title')))
+                    # job_el = job_tile.find_element(By.CLASS_NAME, 'job-card-list__title')
                     job_el.click()
 
                     time.sleep(random.uniform(3, 5))
@@ -313,7 +323,7 @@ class LinkedinEasyApply:
                     radio_options = [text.text.lower() for text in radios]
                     answer = "yes"
 
-                    if 'driver\'s licence' in radio_text or 'driver\'s license' in radio_text:
+                    if 'licence' in radio_text or 'license' in radio_text:
                         answer = self.get_answer('driversLicence')
                     elif 'gender' in radio_text or 'veteran' in radio_text or 'race' in radio_text or 'disability' in radio_text or 'latino' in radio_text:
                         answer = ""
@@ -346,6 +356,12 @@ class LinkedinEasyApply:
                                 answer = "yes"
                                 break
                     elif 'data retention' in radio_text:
+                        answer = 'no'
+                    elif 'comfortable' in radio_text:
+                        answer = 'yes'
+                    elif 'do you have' in radio_text:
+                        answer = 'yes'
+                    elif 'do you require' in radio_text:
                         answer = 'no'
                     else:
                         answer = radio_options[len(radio_options) - 1]
@@ -394,7 +410,7 @@ class LinkedinEasyApply:
                         text_field_type = 'text'
 
                     to_enter = ''
-                    if 'experience do you currently have' in question_text:
+                    if 'experience' in question_text:
                         no_of_years = self.industry_default
 
                         for industry in self.industry:
@@ -403,7 +419,7 @@ class LinkedinEasyApply:
                                 break
 
                         to_enter = no_of_years
-                    elif 'many years of work experience do you have using' in question_text:
+                    elif 'many years' in question_text:
                         no_of_years = self.technology_default
 
                         for technology in self.technology:
@@ -425,9 +441,15 @@ class LinkedinEasyApply:
                         to_enter = self.personal_info['Linkedin']
                     elif 'website' in question_text or 'github' in question_text or 'portfolio' in question_text:
                         to_enter = self.personal_info['Website']
+                    elif 'hourly rate' in question_text:
+                        to_enter = self.hourly_rate
+                    elif 'daily rate' in question_text:
+                        to_enter = self.daily_rate
+                    elif 'desired salary' in question_text:
+                        to_enter = self.desired_salary
                     else:
                         if text_field_type == 'numeric':
-                            to_enter = 0
+                            to_enter = self.technology_default
                         else:
                             to_enter = " ‏‏‎ "
 
@@ -510,7 +532,7 @@ class LinkedinEasyApply:
                             choice = options[len(options) - 1]
 
                         self.select_dropdown(dropdown_field, choice)
-                    elif 'citizenship' in question_text:
+                    elif 'citizen' in question_text:
                         answer = self.get_answer('legallyAuthorized')
 
                         choice = ""

@@ -1,16 +1,16 @@
-email: email@domain.com
-password: yourpassword
+email: 
+password: 
 
 disableAntiLock: False
 
-remote: False
+remote: True
 
 experienceLevel:
  internship: False
- entry: True
+ entry: False
  associate: False
  mid-senior level: False
- director: False
+ director: True
  executive: False
  
 jobTypes:
@@ -28,32 +28,35 @@ date:
  week: False
  24 hours: False
  
-positions:
- #- First position
- #- A second position
- #- A third position
- #- ...
-locations:
- #- First location
- #- A second location
- #- A third location
- #- ...
-distance: 25
+hourlyRate: 1
+dailyRate: 1
+desiredSalary: 1
 
-outputFileDirectory: C:\Users\myDirectory\
+positions:
+        # Syntax: - <your job role>  -<exclusion1>  -<exclusion2> 
+        # Be aware, Linkedin supports the exclusion operator "-".
+        # If, for example, you want to find a job as a Software Developer in any language except Java & PHP you would type: - Software Developer -Java -PHP
+        # Similarly, if you were a Lawyer that wants to exclude civil law, you would type below: - Lawyer -Civil
+        - Software Engineer -Java -PHP
+
+locations:
+  - United States
+  - European Union
+
+distance: 10 
+
+outputFileDirectory: ./output
 
 companyBlacklist:
- #- company
- #- company2
+- BlackListedCompany
 
 titleBlacklist:
- #- word1
- #- word2
+- BlackListedTitle
 
 uploads:
- resume: C:\Users\myDirectory\Resume.pdf
- # Cover letter is optional
- #coverLetter: C:\Users\myDirectory\CoverLettter.pdf
+  resume: ./your_cv_file.pdf # Mandatory, path to your CV
+  # Cover letter is optional
+  #coverLetter: C:\Users\myDirectory\CoverLettter.pdf
 
 
 # ------------ QA section -------------------
@@ -96,45 +99,45 @@ languages:
 # How many years of TECHNOLOGY experience do you currently have? (whole numbers only)
 industry:
  # normal ones
- Accounting/Auditing: 0
- Administrative : 0
- Advertising : 0
- Analyst : 0
- Art/Creative: 0
- Business Development: 0
- Consulting: 0
- Customer Service: 0
- Distribution Design: 0
- Education: 0
- Engineering: 0
- Finance: 0
- General Business: 0
- Health Care Provider: 0
- Human Resources: 0
- Information Technology: 0
- Legal: 0
- Management: 0
- Manufacturing: 0
- Marketing: 0
- Public Relations: 0
- Purchasing: 0
- Product Management: 0
- Project Management: 0
- Production: 0
- Quality Assurance: 0
- Research: 0
- Sales: 0
- Science: 0
- Strategy/Planning: 0
- Supply Chain: 0
- Training: 0
- Writing/Editing: 0
+# Accounting/Auditing: 0
+# Administrative : 0
+# Advertising : 0
+# Analyst : 0
+# Art/Creative: 0
+# Business Development: 0
+# Consulting: 0
+# Customer Service: 0
+# Distribution Design: 0
+# Education: 0
+# Engineering: 1
+# Finance: 0
+# General Business: 1
+# Health Care Provider: 0
+# Human Resources: 0
+# Information Technology: 1
+# Legal: 0
+# Management: 0
+# Manufacturing: 0
+# Marketing: 0
+# Public Relations: 0
+# Purchasing: 0
+# Product Management: 1
+# Project Management: 1
+# Production: 0
+# Quality Assurance: 0
+# Research: 0
+# Sales: 0
+# Science: 0
+# Strategy/Planning: 0
+# Supply Chain: 0
+# Training: 0
+# Writing/Editing: 0
  # end normal ones
  # put your custom ones here
  #C++: 0
  #Python: 1
  # default to put for any skill that you did not list
- default: 0
+ default: 15
  # end custom ones
 
 
@@ -143,25 +146,25 @@ industry:
 technology:
  #python: 0
  #selenium: 0
- # default to put for any skill that you did not list
- default: 0
+ # default to put for any skill that you did not list\
+ default: 15
 # ------------ Additional parameters: personal info ---------------
 personalInfo:
- First Name: FirstName
- Last Name: LastName
- Phone Country Code: Canada (+1) # See linkedin for your country code, must be exact
- Mobile Phone Number: 1234567890
- Street address: 123 Fake Street
- City: Red Deer, Alberta # Include the state/province as well!
- State: YourState
- Zip: YourZip/Postal
- Linkedin: https://www.linkedin.com/in/my-linkedin-profile
- Website: https://www.my-website.com # github/website is interchangable here
-
+ First Name: Firstname # Your first name, without quotes
+ Last Name:  Lastname # Your last name, without quotes
+ Phone Country Code: MyCountry (+123) # See linkedin for your country code, must be exact, example: Italy (+39)
+ Mobile Phone Number: 123456789 # Your phone number, just digits, without prefix
+ Street address: None # Your street without quotes
+ City: MyCity # Include the state/province as well!
+ State: MyCountry #
+ Zip: 123456 # Your zipcode, just digits
+ Linkedin: https://www.linkedin.com/in/change_me_please # URL to your linkedin profile
+ Website: https://github.com/change_me_please # URL to your github/website, anything
+ 
 # ------------ Additional parameters: USA employment crap ---------------
 eeo:
- gender: None
- race: None
- vetran: None
- disability: None
- citizenship: Canadian
+ gender: None # This has no effect
+ race: None # This has no effect
+ vetran: None # This has no effect
+ disability: None # This has no effect
+ citizenship: MyCitizenShip # This has no effect
