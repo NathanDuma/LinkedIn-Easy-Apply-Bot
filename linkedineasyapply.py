@@ -1,12 +1,8 @@
 import time, random, csv, pyautogui, pdb, traceback, sys
 from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import StaleElementReferenceException
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
 from datetime import date
 from itertools import product
 
@@ -171,10 +167,7 @@ class LinkedinEasyApply:
             if company.lower() not in [word.lower() for word in self.company_blacklist] and \
                contains_blacklisted_keywords is False and link not in self.seen_jobs:
                 try:
-                    ignored_exceptions=(NoSuchElementException,StaleElementReferenceException,)
-                    job_el = WebDriverWait(self.browser, 5000,ignored_exceptions=ignored_exceptions)\
-                                            .until(expected_conditions.presence_of_element_located((By.CLASS_NAME, 'job-card-list__title')))
-                    # job_el = job_tile.find_element(By.CLASS_NAME, 'job-card-list__title')
+                    job_el = job_tile.find_element(By.CLASS_NAME, 'job-card-list__title')
                     job_el.click()
 
                     time.sleep(random.uniform(3, 5))
@@ -318,71 +311,86 @@ class LinkedinEasyApply:
                 # Radio check
                 try:
                     radios = el.find_element(By.CLASS_NAME, 'jobs-easy-apply-form-element').find_elements(By.CLASS_NAME, 'fb-radio')
+                    
+                    if len(radios) > 0:
 
-                    radio_text = el.text.lower()
-                    radio_options = [text.text.lower() for text in radios]
-                    answer = "yes"
+                        radio_text = el.text.lower()
+                        radio_options = [text.text.lower() for text in radios]
+                        answer = "yes"
 
-                    if 'licence' in radio_text or 'license' in radio_text:
-                        answer = self.get_answer('driversLicence')
-                    elif 'gender' in radio_text or 'veteran' in radio_text or 'race' in radio_text or 'disability' in radio_text or 'latino' in radio_text:
-                        answer = ""
-                        for option in radio_options:
-                            if 'prefer' in option.lower() or 'decline' in option.lower() or 'don\'t' in option.lower() or 'specified' in option.lower() or 'none' in option.lower():
-                                answer = option
+                        if 'licence' in radio_text or 'license' in radio_text:
+                            answer = self.get_answer('driversLicence')
+                        elif 'gender' in radio_text or 'veteran' in radio_text or 'race' in radio_text or 'disability' in radio_text or 'latino' in radio_text:
+                            answer = ""
+                            for option in radio_options:
+                                if 'prefer' in option.lower() or 'decline' in option.lower() or 'don\'t' in option.lower() or 'specified' in option.lower() or 'none' in option.lower():
+                                    answer = option
 
-                        if answer == "":
+                            if answer == "":
+                                answer = radio_options[len(radio_options) - 1]
+                        elif 'north korea' in radio_text:
+                            answer = 'no'
+                        elif 'sponsor' in radio_text:
+                            answer = self.get_answer('requireVisa')
+                        elif 'authorized' in radio_text or 'authorised' in radio_text or 'legally' in radio_text:
+                            answer = self.get_answer('legallyAuthorized')
+                        elif 'urgent' in radio_text:
+                            answer = self.get_answer('urgentFill')
+                        elif 'commuting' in radio_text:
+                            answer = self.get_answer('commute')
+                        elif 'background check' in radio_text:
+                            answer = self.get_answer('backgroundCheck')
+                        elif 'level of education' in radio_text:
+                            for degree in self.checkboxes['degreeCompleted']:
+                                if degree.lower() in radio_text:
+                                    answer = "yes"
+                                    break
+                        elif 'level of education' in radio_text:
+                            for degree in self.checkboxes['degreeCompleted']:
+                                if degree.lower() in radio_text:
+                                    answer = "yes"
+                                    break
+                        elif 'data retention' in radio_text:
+                            answer = 'no'
+                        elif 'comfortable' in radio_text:
+                            answer = 'yes'
+                        elif 'do you have' in radio_text:
+                            answer = 'yes'
+                        elif 'do you require' in radio_text:
+                            answer = 'no'
+                        else:
                             answer = radio_options[len(radio_options) - 1]
-                    elif 'north korea' in radio_text:
-                        answer = 'no'
-                    elif 'sponsor' in radio_text:
-                        answer = self.get_answer('requireVisa')
-                    elif 'authorized' in radio_text or 'authorised' in radio_text or 'legally' in radio_text:
-                        answer = self.get_answer('legallyAuthorized')
-                    elif 'urgent' in radio_text:
-                        answer = self.get_answer('urgentFill')
-                    elif 'commuting' in radio_text:
-                        answer = self.get_answer('commute')
-                    elif 'background check' in radio_text:
-                        answer = self.get_answer('backgroundCheck')
-                    elif 'level of education' in radio_text:
-                        for degree in self.checkboxes['degreeCompleted']:
-                            if degree.lower() in radio_text:
-                                answer = "yes"
-                                break
-                    elif 'level of education' in radio_text:
-                        for degree in self.checkboxes['degreeCompleted']:
-                            if degree.lower() in radio_text:
-                                answer = "yes"
-                                break
-                    elif 'data retention' in radio_text:
-                        answer = 'no'
-                    elif 'comfortable' in radio_text:
-                        answer = 'yes'
-                    elif 'do you have' in radio_text:
-                        answer = 'yes'
-                    elif 'do you require' in radio_text:
-                        answer = 'no'
-                    else:
-                        answer = radio_options[len(radio_options) - 1]
 
-                    i = 0
-                    to_select = None
-                    for radio in radios:
-                        if answer in radio.text.lower():
-                            to_select = radios[i]
-                        i += 1
+                        i = 0
+                        to_select = None
+                        for radio in radios:
+                            if answer in radio.text.lower():
+                                to_select = radios[i]
+                            i += 1
 
-                    if to_select is None:
-                        to_select = radios[len(radios)-1]
+                        if to_select is None:
+                            to_select = radios[len(radios)-1]
 
-                    self.radio_select(to_select, answer, len(radios) > 2)
+                        self.radio_select(to_select, answer, len(radios) > 2)
 
-                    if radios != []:
-                        continue
+                        if radios != []:
+                            continue
                 except:
                     pass
-                # Questions check
+                # Date Check
+                try:
+                    date_picker = el.find_element(By.CLASS_NAME, 'artdeco-datepicker__input')
+                    picker_input = date_picker.find_element(By.CLASS_NAME, 'artdeco-text-input--input')
+                    # date_picker.clear()
+                    # picker_input.send_keys(date.today().strftime("%m/%d/%y"))
+                    # time.sleep(3)
+                    picker_input.send_keys(Keys.RETURN)
+                    time.sleep(3)
+                    picker_input.send_keys(Keys.RETURN)
+                    continue
+                except Exception:
+                    print("Could not fill date picker")
+                    traceback.print_exc()                # Questions check
                 try:
                     question = el.find_element(By.CLASS_NAME, 'jobs-easy-apply-form-element')
                     question_text = question.find_element(By.CLASS_NAME, 'fb-form-element-label').text.lower()
@@ -447,6 +455,8 @@ class LinkedinEasyApply:
                         to_enter = self.daily_rate
                     elif 'desired salary' in question_text:
                         to_enter = self.desired_salary
+                    elif 'candidate location' in question_text:
+                        to_enter = self.personal_info['City']
                     else:
                         if text_field_type == 'numeric':
                             to_enter = self.technology_default
@@ -460,17 +470,6 @@ class LinkedinEasyApply:
                         to_enter = " ‏‏‎ "
 
                     self.enter_text(txt_field, to_enter)
-                    continue
-                except:
-                    pass
-                # Date Check
-                try:
-                    date_picker = el.find_element(By.CLASS_NAME, 'artdeco-datepicker__input ')
-                    date_picker.clear()
-                    date_picker.send_keys(date.today().strftime("%m/%d/%y"))
-                    time.sleep(3)
-                    date_picker.send_keys(Keys.RETURN)
-                    time.sleep(2)
                     continue
                 except:
                     pass
