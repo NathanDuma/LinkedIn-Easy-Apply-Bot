@@ -41,9 +41,9 @@ class LinkedinEasyApply:
         try:
             self.browser.get("https://www.linkedin.com/login")
             time.sleep(random.uniform(5, 10))
-            self.browser.find_element_by_id("username").send_keys(self.email)
-            self.browser.find_element_by_id("password").send_keys(self.password)
-            self.browser.find_element_by_css_selector(".btn__primary--large").click()
+            self.browser.find_element(By.ID, ("username")).send_keys(self.email)
+            self.browser.find_element(By.ID, ("password")).send_keys(self.password)
+            self.browser.find_element(By.CSS_SELECTOR, (".btn__primary--large")).click()
             time.sleep(random.uniform(5, 10))
         except TimeoutException:
             raise Exception("Could not login!")
@@ -729,4 +729,3 @@ class LinkedinEasyApply:
                          "&keywords=" + position + location + "&start=" + str(job_page*25))
 
         self.avoid_lock()
-
