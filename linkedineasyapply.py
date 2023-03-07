@@ -132,25 +132,25 @@ class LinkedinEasyApply:
         if len(job_list) == 0:
             raise Exception("No more jobs on this page")
 
-        for job_tile in job_list:
+        for job_title in job_list:
             job_title, company, job_location, apply_method, link = "", "", "", "", ""
 
             try:
-                job_list = job_results.find_elements_by_class_name('scaffold-layout__list-container')[0].find_elements_by_class_name('scaffold-layout__list-item')
-                job_title = job_tile.find_element(By.CLASS_NAME,'job-card-list__title').text
-                link = job_tile.find_element(By.CLASS_NAME,'job-card-list__title').get_attribute('href').split('?')[0]
+                job_list = job_results.find_elements(By.CLASS_NAME('scaffold-layout__list-container')[0]).find_elements(By.CLASS_NAME('scaffold-layout__list-item'))
+                job_title = job_title.find_element(By.CLASS_NAME,'job-card-list__title').text
+                link = job_title.find_element(By.CLASS_NAME,'job-card-list__title').get_attribute('href').split('?')[0]
             except:
                 pass
             try:
-                company = job_tile.find_element(By.CLASS_NAME,'job-card-container__company-name').text
+                company = job_title.find_element(By.CLASS_NAME,'job-card-container__company-name').text
             except:
                 pass
             try:
-                job_location = job_tile.find_element(By.CLASS_NAME,'job-card-container__metadata-item').text
+                job_location = job_title.find_element(By.CLASS_NAME,'job-card-container__metadata-item').text
             except:
                 pass
             try:
-                apply_method = job_tile.find_element(By.CLASS_NAME,'job-card-container__apply-method').text
+                apply_method = job_title.find_element(By.CLASS_NAME,'job-card-container__apply-method').text
             except:
                 pass
 
@@ -165,7 +165,8 @@ class LinkedinEasyApply:
             if company.lower() not in [word.lower() for word in self.company_blacklist] and \
                contains_blacklisted_keywords is False and link not in self.seen_jobs:
                 try:
-                    job_el = job_tile.find_elements(By.CLASS_NAME,'job-card-list__title')[0]
+                    #job_el = job_title.find_elements(By.CLASS_NAME,'job-card-list__title')[0]
+                    job_el = self.browser.find_elements(By.CLASS_NAME,'job-card-list__title')[0]
                     job_el.click()
 
                     time.sleep(random.uniform(3, 5))
@@ -233,6 +234,19 @@ class LinkedinEasyApply:
                             self.unfollow()
                         except:
                             print("Failed to unfollow company!")
+
+
+                    if 'Be sure to include an updated resume' in self.browser.find_element(By.CLASS_NAME, 'jobs-easy-apply-content').text:
+                        try:
+                            #resume_atch_button = self.browser.find_element(By.CLASS_NAME, 'jobs-resume-picker__resume-btn-container') # find resume choose button
+                            self.browser.find_element(By.CLASS_NAME, "artdeco-button--1").text # find resume choose button
+                            self.browser.find_element(By.CLASS_NAME, "artdeco-button--1").click() # click resume choose button
+                        except:
+                            pass
+                    else:
+                        if submit_application_text in button_text.lower():
+                            next_button.click()
+
                     time.sleep(random.uniform(1.5, 2.5))
                     next_button.click()
                     time.sleep(random.uniform(3.0, 5.0))
@@ -244,12 +258,13 @@ class LinkedinEasyApply:
                         break
                 except:
                     traceback.print_exc()
-                    raise Exception("Failed to apply to job!")
+                    pass
+                    #raise Exception("Failed to apply to job!")
             if retries == 0:
                 traceback.print_exc()
-                self.browser.find_element_by_class_name('artdeco-modal__dismiss').click()
+                self.browser.find_element(By.CLASS_NAME('artdeco-modal__dismiss')).click()
                 time.sleep(random.uniform(3, 5))
-                self.browser.find_elements_by_class_name('artdeco-modal__confirm-dialog-btn')[1].click()
+                self.browser.find_elements(By.CLASS_NAME('artdeco-modal__confirm-dialog-btn')[1]).click()
                 time.sleep(random.uniform(3, 5))
                 raise Exception("Failed to apply to job!")
 
@@ -274,11 +289,11 @@ class LinkedinEasyApply:
 
     def home_address(self, element):
         try:
-            groups = element.find_element_by_class_name('jobs-easy-apply-form-section__grouping')
+            groups = element.find_element(By.CLASS_NAME('jobs-easy-apply-form-section__grouping'))
             if len(groups) > 0:
                 for group in groups:
-                    lb = group.find_element_by_tag_name('label').text.lower()
-                    input_field = group.find_element_by_tag_name('input')
+                    lb = group.find_element(By.TAG_NAME('label').text.lower())
+                    input_field = group.find_element(By.TAG_NAME('input'))
                     if 'street' in lb:
                         self.enter_text(input_field, self.personal_info['Street address'])
                     elif 'city' in lb:
@@ -304,7 +319,7 @@ class LinkedinEasyApply:
     def additional_questions(self):
         #pdb.set_trace()
         frm_el = self.browser.find_element(By.CLASS_NAME, 'jobs-easy-apply-form-section__grouping')
-        if len(frm_el) > 0:
+        if len(str(frm_el)) > 0:
             for el in frm_el:
                 # Radio check
                 try:
@@ -370,11 +385,12 @@ class LinkedinEasyApply:
                 # Questions check
                 try:
                     question = el.find_element(By.CLASS_NAME,'jobs-easy-apply-form-element')
-                    question_text = question.find_element(By.CLASS_NAME,'fb-form-element-label').text.lower()
+                    question_text = question.find_element(By.CLASS_NAME,'artdeco-text-input--label').text.lower()
 
                     txt_field_visible = False
                     try:
-                        txt_field = question.find_element(By.CLASS_NAME,'fb-single-line-text__input')
+                        #txt_field = question.find_element(By.CLASS_NAME,'fb-single-line-text__input') # this old POS isnt working
+                        txt_field = question.find_element(By.CLASS_NAME,'artdeco-text-input--input')
 
                         txt_field_visible = True
                     except:
@@ -567,7 +583,7 @@ class LinkedinEasyApply:
                 try:
                     question = el.find_element(By.CLASS_NAME,'jobs-easy-apply-form-element')
 
-                    clickable_checkbox = question.find_element_by_tag_name('label')
+                    clickable_checkbox = question.find_element(By.TAG_NAME('label'))
 
                     clickable_checkbox.click()
                 except:
@@ -609,7 +625,7 @@ class LinkedinEasyApply:
 
     # Radio Select
     def radio_select(self, element, label_text, clickLast=False):
-        label = element.find_element_by_tag_name('label')
+        label = element.find_element(By.TAG_NAME('label'))
         if label_text in label.text.lower() or clickLast == True:
             label.click()
         else:
@@ -638,16 +654,17 @@ class LinkedinEasyApply:
     def fill_up(self):
         try:
             easy_apply_content = self.browser.find_element(By.CLASS_NAME,'jobs-easy-apply-content')
-            pb4 = self.browser.find_element(By.CLASS_NAME, 'pb4')
-            if len(pb4) > 0:
+            pb4 = self.browser.find_elements(By.CLASS_NAME, 'pb4')
+            if len(str(pb4)) > 0:
                 for pb in pb4:
                     try:
                         #label = pb.find_element_by_tag_name('h3').text.lower()
                         label = self.browser.find_element(By.TAG_NAME, 'h3').text.lower()
-                        try:
+                        #label = self.browser.find_elements(By.TAG_NAME, 'h3')
+                        if 'additional questions' in label:
                             self.additional_questions()
-                        except:
-                            pass
+                        else:
+                            break
 
                         try:
                             self.send_resume()
