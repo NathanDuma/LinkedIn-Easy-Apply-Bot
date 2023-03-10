@@ -132,25 +132,25 @@ class LinkedinEasyApply:
         if len(job_list) == 0:
             raise Exception("No more jobs on this page")
 
-        for job_title in job_list:
+        for title in job_list:
             job_title, company, job_location, apply_method, link = "", "", "", "", ""
 
             try:
-                job_list = job_results.find_elements(By.CLASS_NAME('scaffold-layout__list-container')[0]).find_elements(By.CLASS_NAME('scaffold-layout__list-item'))
-                job_title = job_title.find_element(By.CLASS_NAME,'job-card-list__title').text
-                link = job_title.find_element(By.CLASS_NAME,'job-card-list__title').get_attribute('href').split('?')[0]
+                job_list = job_results.find_elements(By.CLASS_NAME, 'scaffold-layout__list-container')[0].find_elements(By.CLASS_NAME, 'scaffold-layout__list-item')
+                job_title = title.find_element(By.CLASS_NAME, 'job-card-list__title').text
+                link = title.find_element(By.CLASS_NAME, 'job-card-list__title').get_attribute('href').split('?')[0]
             except:
                 pass
             try:
-                company = job_title.find_element(By.CLASS_NAME,'job-card-container__company-name').text
+                company = title.find_element(By.CLASS_NAME,'job-card-container__company-name').text
             except:
                 pass
             try:
-                job_location = job_title.find_element(By.CLASS_NAME,'job-card-container__metadata-item').text
+                job_location = title.find_element(By.CLASS_NAME,'job-card-container__metadata-item').text
             except:
                 pass
             try:
-                apply_method = job_title.find_element(By.CLASS_NAME,'job-card-container__apply-method').text
+                apply_method = title.find_element(By.CLASS_NAME,'job-card-container__apply-method').text
             except:
                 pass
 
@@ -166,7 +166,7 @@ class LinkedinEasyApply:
                contains_blacklisted_keywords is False and link not in self.seen_jobs:
                 try:
                     #job_el = job_title.find_elements(By.CLASS_NAME,'job-card-list__title')[0]
-                    job_el = self.browser.find_elements(By.CLASS_NAME,'job-card-list__title')[0]
+                    job_el = title.find_elements(By.CLASS_NAME,'job-card-list__title')[0]
                     job_el.click()
 
                     time.sleep(random.uniform(3, 5))
@@ -239,8 +239,9 @@ class LinkedinEasyApply:
                     if 'Be sure to include an updated resume' in self.browser.find_element(By.CLASS_NAME, 'jobs-easy-apply-content').text:
                         try:
                             #resume_atch_button = self.browser.find_element(By.CLASS_NAME, 'jobs-resume-picker__resume-btn-container') # find resume choose button
-                            self.browser.find_element(By.CLASS_NAME, "artdeco-button--1").text # find resume choose button
-                            self.browser.find_element(By.CLASS_NAME, "artdeco-button--1").click() # click resume choose button
+                            sel_btn = self.browser.find_element(By.CLASS_NAME, "artdeco-button--1").text # find resume choose button
+                            if sel_btn.lower() == 'choose':
+                                self.browser.find_element(By.CLASS_NAME, "artdeco-button--1").click() # click resume choose button
                         except:
                             pass
                     else:
@@ -258,8 +259,8 @@ class LinkedinEasyApply:
                         break
                 except:
                     traceback.print_exc()
-                    pass
-                    #raise Exception("Failed to apply to job!")
+                    #pass
+                    raise Exception("Failed to apply to job!")
             if retries == 0:
                 traceback.print_exc()
                 self.browser.find_element(By.CLASS_NAME('artdeco-modal__dismiss')).click()
@@ -318,7 +319,7 @@ class LinkedinEasyApply:
 
     def additional_questions(self):
         #pdb.set_trace()
-        frm_el = self.browser.find_element(By.CLASS_NAME, 'jobs-easy-apply-form-section__grouping')
+        frm_el = self.browser.find_elements(By.CLASS_NAME, 'jobs-easy-apply-form-section__grouping')
         if len(str(frm_el)) > 0:
             for el in frm_el:
                 # Radio check
@@ -404,7 +405,7 @@ class LinkedinEasyApply:
                     if txt_field_visible != True:
                         txt_field = question.find_element(By.CLASS_NAME,'multi-line-text__input')
 
-                    text_field_type = txt_field.get_attribute('name').lower()
+                    text_field_type = txt_field.get_attribute('type').lower()
                     if 'numeric' in text_field_type:
                         text_field_type = 'numeric'
                     elif 'text' in text_field_type:
@@ -420,7 +421,7 @@ class LinkedinEasyApply:
                                 break
 
                         to_enter = no_of_years
-                    elif 'many years of work experience do you have using' in question_text:
+                    elif 'many years of work experience do you have' in question_text:
                         no_of_years = self.technology_default
 
                         for technology in self.technology:
@@ -474,9 +475,10 @@ class LinkedinEasyApply:
                 # Dropdown check
                 try:
                     question = el.find_element(By.CLASS_NAME,'jobs-easy-apply-form-element')
-                    question_text = question.find_element(By.CLASS_NAME,'fb-form-element-label').text.lower()
+                    question_text = question.find_element(By.CLASS_NAME,'fb-dash-form-element__label').text.lower()
+                    #fb-dash-form-element__label
 
-                    dropdown_field = question.find_element(By.CLASS_NAME,'fb-dropdown__select')
+                    dropdown_field = question.find_element(By.XPATH, "//*[contains(@id, 'text-entity-list-form-component-formElement-urn-li-jobs')]")
 
                     select = Select(dropdown_field)
 
