@@ -239,9 +239,9 @@ class LinkedinEasyApply:
                     if 'Be sure to include an updated resume' in self.browser.find_element(By.CLASS_NAME, 'jobs-easy-apply-content').text:
                         try:
                             #resume_atch_button = self.browser.find_element(By.CLASS_NAME, 'jobs-resume-picker__resume-btn-container') # find resume choose button
-                            sel_btn = self.browser.find_element(By.CLASS_NAME, "artdeco-button--1").text # find resume choose button
-                            if sel_btn.lower() == 'choose':
-                                self.browser.find_element(By.CLASS_NAME, "artdeco-button--1").click() # click resume choose button
+                            sel_btn = self.browser.find_element(By.CSS_SELECTOR,
+                                                                "[aria-label='Choose Resume']")  # find resume choose button
+                            sel_btn.click() # click resume choose button
                         except:
                             pass
                     else:
