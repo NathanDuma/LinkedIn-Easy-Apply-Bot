@@ -263,9 +263,9 @@ class LinkedinEasyApply:
                     raise Exception("Failed to apply to job!")
             if retries == 0:
                 traceback.print_exc()
-                self.browser.find_element(By.CLASS_NAME('artdeco-modal__dismiss')).click()
+                self.browser.find_element(By.CLASS_NAME, 'artdeco-modal__dismiss').click()
                 time.sleep(random.uniform(3, 5))
-                self.browser.find_elements(By.CLASS_NAME('artdeco-modal__confirm-dialog-btn')[1]).click()
+                self.browser.find_elements(By.CLASS_NAME, 'artdeco-modal__confirm-dialog-btn')[1].click()
                 time.sleep(random.uniform(3, 5))
                 raise Exception("Failed to apply to job!")
 
@@ -445,6 +445,8 @@ class LinkedinEasyApply:
                         to_enter = self.personal_info['Website']
                     elif 'salary' in question_text:
                         to_enter = self.personal_info['Salary Expectations']
+                    elif 'hear about this job' in question_text:
+                        to_enter = 'LinkedIn'
                     else:
                         if text_field_type == 'numeric':
                             to_enter = 0
