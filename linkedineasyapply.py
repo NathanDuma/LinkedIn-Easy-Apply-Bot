@@ -125,7 +125,6 @@ class LinkedinEasyApply:
             self.scroll_slow(job_results)
             self.scroll_slow(job_results, step=300, reverse=True)
             job_list = job_results.find_elements(By.CLASS_NAME, 'scaffold-layout__list-container')[0].find_elements(By.CLASS_NAME, 'jobs-search-results__list-item')
-            # job_list = self.browser.find_element(By.CLASS_NAME,'jobs-search-results__list-item')[0]
         except:
             raise Exception("No more jobs on this page")
 
@@ -142,7 +141,7 @@ class LinkedinEasyApply:
             except:
                 pass
             try:
-                company = title.find_element(By.CLASS_NAME,'job-card-container__company-name').text
+                company = title.find_element(By.XPATH,'//*[@id="main"]/div/div[2]/div/div[2]/div[1]/div/div[1]/div[1]/div[1]/div[1]/div[1]/span[1]/span[1]').text
             except:
                 pass
             try:
@@ -150,7 +149,7 @@ class LinkedinEasyApply:
             except:
                 pass
             try:
-                apply_method = title.find_element(By.CLASS_NAME,'job-card-container__apply-method').text
+                apply_method = title.find_element(By.XPATH, '//*[@id="ember172"]/div/div[1]/ul/li[2]').text
             except:
                 pass
 
@@ -165,13 +164,9 @@ class LinkedinEasyApply:
             if company.lower() not in [word.lower() for word in self.company_blacklist] and \
                contains_blacklisted_keywords is False and link not in self.seen_jobs:
                 try:
-                    #job_el = job_title.find_elements(By.CLASS_NAME,'job-card-list__title')[0]
                     job_el = title.find_elements(By.CLASS_NAME,'job-card-list__title')[0]
                     job_el.click()
-
                     time.sleep(random.uniform(3, 5))
-
-
                     try:
                         done_applying = self.apply_to_job()
                         if done_applying:
@@ -186,6 +181,7 @@ class LinkedinEasyApply:
                         try:
                             self.write_to_file(company, job_title, link, job_location, location)
                         except:
+                            print("Failed to write to file at line 184")
                             pass
                         self.file_name = temp
 
@@ -238,7 +234,6 @@ class LinkedinEasyApply:
 
                     if 'Be sure to include an updated resume' in self.browser.find_element(By.CLASS_NAME, 'jobs-easy-apply-content').text:
                         try:
-                            #resume_atch_button = self.browser.find_element(By.CLASS_NAME, 'jobs-resume-picker__resume-btn-container') # find resume choose button
                             sel_btn = self.browser.find_element(By.CSS_SELECTOR,
                                                                 "[aria-label='Choose Resume']")  # find resume choose button
                             sel_btn.click() # click resume choose button
@@ -259,7 +254,6 @@ class LinkedinEasyApply:
                         break
                 except:
                     traceback.print_exc()
-                    #pass
                     raise Exception("Failed to apply to job!")
             if retries == 0:
                 traceback.print_exc()
@@ -271,14 +265,15 @@ class LinkedinEasyApply:
 
         closed_notification = False
         time.sleep(random.uniform(3, 5))
+
         try:
-            self.browser.find_element(By.CLASS_NAME,'artdeco-modal__dismiss').click()
-            closed_notification = True
-        except:
-            pass
-        try:
-            self.browser.find_element(By.CLASS_NAME,'artdeco-toast-item__dismiss').click()
-            closed_notification = True
+            dismiss_btn = self.browser.find_element(By.CLASS_NAME,'artdeco-modal__dismiss')
+            if dismiss_btn is not None:
+                dismiss_btn.click()
+                closed_notification = True
+                return True
+            else:
+                print("Unable to find dismiss button for window!")
         except:
             pass
         time.sleep(random.uniform(3, 5))
@@ -290,7 +285,7 @@ class LinkedinEasyApply:
 
     def home_address(self, element):
         try:
-            groups = element.find_element(By.CLASS_NAME('jobs-easy-apply-form-section__grouping'))
+            groups = element[0].text
             if len(groups) > 0:
                 for group in groups:
                     lb = group.find_element(By.TAG_NAME('label').text.lower())
@@ -318,16 +313,15 @@ class LinkedinEasyApply:
             return 'no'
 
     def additional_questions(self):
-        #pdb.set_trace()
+        pdb.set_trace()
         frm_el = self.browser.find_elements(By.CLASS_NAME, 'jobs-easy-apply-form-section__grouping')
         if len(str(frm_el)) > 0:
             for el in frm_el:
                 # Radio check
                 try:
-                    radios = el.find_element(By.CLASS_NAME, 'jobs-easy-apply-form-element').find_element(By.CLASS_NAME, 'fb-radio')
-
+                    radios = el.find_elements(By.XPATH, ("//*[contains(@id, 'radio-button-form-component-formElement-urn-li-jobs-applyformcommon-easyApplyFormElement')]//label[@class='t-14']"))
                     radio_text = el.text.lower()
-                    radio_options = [text.text.lower() for text in radios]
+                    radio_options = [text for text in radios]
                     answer = "yes"
 
                     if 'driver\'s licence' in radio_text or 'driver\'s license' in radio_text:
@@ -369,10 +363,9 @@ class LinkedinEasyApply:
 
                     i = 0
                     to_select = None
-                    for radio in radios:
-                        if answer in radio.text.lower():
-                            to_select = radios[i]
-                        i += 1
+                    if answer in radios[i].text.lower():
+                        to_select = radios[i]
+                    #i += 1
 
                     if to_select is None:
                         to_select = radios[len(radios)-1]
@@ -390,7 +383,6 @@ class LinkedinEasyApply:
 
                     txt_field_visible = False
                     try:
-                        #txt_field = question.find_element(By.CLASS_NAME,'fb-single-line-text__input') # this old POS isnt working
                         txt_field = question.find_element(By.CLASS_NAME,'artdeco-text-input--input')
 
                         txt_field_visible = True
@@ -478,7 +470,6 @@ class LinkedinEasyApply:
                 try:
                     question = el.find_element(By.CLASS_NAME,'jobs-easy-apply-form-element')
                     question_text = question.find_element(By.CLASS_NAME,'fb-dash-form-element__label').text.lower()
-                    #fb-dash-form-element__label
 
                     dropdown_field = question.find_element(By.XPATH, "//*[contains(@id, 'text-entity-list-form-component-formElement-urn-li-jobs')]")
 
@@ -606,10 +597,10 @@ class LinkedinEasyApply:
             if len(self.browser.find_elements(file_upload_elements[0], file_upload_elements[1])) > 0:
                 input_buttons = self.browser.find_elements(file_upload_elements[0], file_upload_elements[1])
                 for upload_button in input_buttons:
-                    upload_type = upload_button.find_element(By.XPATH, "..").find_element(By.XPATH, "preceding-sibling::*")
-                    if 'resume' in upload_type.text.lower():
-                        upload_button.send_keys(self.resume_dir)
-                    elif 'cover' in upload_type.text.lower():
+                    upload_type = upload_button.find_elements(By.XPATH, '//*[contains(@id, "Upload")]')
+                    if 'resume' in upload_type[0].text.lower():
+                            upload_button.send_keys(self.resume_dir)
+                    elif 'cover' in upload_type[0].text.lower():
                         if self.cover_letter_dir != '':
                             upload_button.send_keys(self.cover_letter_dir)
                         elif 'required' in upload_type.text.lower():
@@ -629,28 +620,29 @@ class LinkedinEasyApply:
 
     # Radio Select
     def radio_select(self, element, label_text, clickLast=False):
-        label = element.find_element(By.TAG_NAME('label'))
-        if label_text in label.text.lower() or clickLast == True:
-            label.click()
+        if label_text in element.text.lower() or clickLast == True:
+            element.click()
         else:
             pass
 
     # Contact info fill-up
     def contact_info(self):
-        frm_el = self.browser.find_element(By.CLASS_NAME, 'jobs-easy-apply-form-section__grouping')
+        frm_el = self.browser.find_elements(By.CLASS_NAME, 'jobs-easy-apply-form-section__grouping')
         if len(frm_el) > 0:
             for el in frm_el:
                 text = el.text.lower()
                 if 'email address' in text:
                     continue
-                elif 'phone number' in text:
+                elif 'phone country code' in text:
                     try:
-                        country_code_picker = el.find_element(By.CLASS_NAME,'fb-dropdown__select')
+                        country_code_picker = el.find_element(By.XPATH, '//*[contains(@id, "phoneNumber-country")]')
                         self.select_dropdown(country_code_picker, self.personal_info['Phone Country Code'])
                     except:
-                        print("Country code " + self.personal_info['Phone Country Code'] + " not found! Make sure it is exact.")
+                        print("Country code " + self.personal_info['Phone Country Code'] +
+                              " not found! Make sure it is exact.")
+                elif 'mobile phone number' in text:
                     try:
-                        phone_number_field = el.find_element(By.CLASS_NAME,'fb-single-line-text__input')
+                        phone_number_field = el.find_element(By.CLASS_NAME,"artdeco-text-input--input")
                         self.enter_text(phone_number_field, self.personal_info['Mobile Phone Number'])
                     except:
                         print("Could not input phone number.")
@@ -662,21 +654,15 @@ class LinkedinEasyApply:
             if len(str(pb4)) > 0:
                 for pb in pb4:
                     try:
-                        #label = pb.find_element_by_tag_name('h3').text.lower()
                         label = self.browser.find_element(By.TAG_NAME, 'h3').text.lower()
-                        #label = self.browser.find_elements(By.TAG_NAME, 'h3')
-                        if 'additional questions' in label:
-                            self.additional_questions()
-                        else:
-                            break
-
                         try:
                             self.send_resume()
                         except:
                             pass
-
-                        if 'home address' in label:
-                            self.home_address(pb)
+                        if 'additional questions' in label:
+                            self.additional_questions()
+                        elif 'home address' in label:
+                            self.home_address(pb4)
                         elif 'contact info' in label:
                             self.contact_info()
                     except:
@@ -686,7 +672,7 @@ class LinkedinEasyApply:
 
     def write_to_file(self, company, job_title, link, location, search_location):
         to_write = [company, job_title, link, location]
-        file_path = self.output_file_directory + self.file_name + search_location + ".csv"
+        file_path = self.output_file_directory + '\\' + self.file_name + search_location + ".csv"
 
         with open(file_path, 'a') as f:
             writer = csv.writer(f)
