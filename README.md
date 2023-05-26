@@ -1,4 +1,10 @@
 # LinkedIn Easy Apply Bot
+This repository is based off of Nathan Duma's because it wasn't updated in a while and LI's constantly introducing new interface changes.
+
+Without Nathan, I wouldn't have a repository to copy and update. Thanks to the original author.
+
+The rest of the readme is from the original:
+
 Automatically apply to LinkedIn Easy Apply jobs. This bot answers the application questions as well!
 
 This is for educational purposes only. I am not responsible if your LinkedIn account gets suspended or for anything else.
@@ -387,6 +393,7 @@ The website is interchangable for github/portfolio/website.
 personalInfo:
  First Name: FirstName
  Last Name: LastName
+ Salary Expectations: # Literally what salary you expect from the position, according to your country's customs, may be annual or monthly or weekly etc.
  Phone Country Code: Canada (+1) # See linkedin for your country code, must be exact
  Mobile Phone Number: 1234567890
  Street address: 123 Fake Street
